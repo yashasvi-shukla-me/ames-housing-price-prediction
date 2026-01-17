@@ -5,16 +5,17 @@ import joblib
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import GradientBoostingRegressor
 
-from preprocessing import clean_data
+from preprocessing import fill_none_cols
 from encoder import Encoder
+from imputer import MedianImputer
 
 
 def main():
     # Load raw training data
     train = pd.read_csv("data/raw/train.csv")
 
-    # Clean missing values (NO encoding yet)
-    train = clean_data(train)
+    # Fill categorical missing values
+    train = fill_none_cols(train)
 
     # Separate target
     y = train["SalePrice"]
@@ -23,14 +24,16 @@ def main():
     # Log transform target
     y = y.apply(lambda x: np.log1p(x))
 
-    # Fit encoder on training features
+    # Fit imputer on training data
+    imputer = MedianImputer()
+    imputer.fit(X)
+    X = imputer.transform(X)
+    imputer.save("models/imputer.pkl")
+
+    # Fit encoder
     encoder = Encoder()
     encoder.fit(X)
-
-    # Transform features using fitted encoder
     X_encoded = encoder.transform(X)
-
-    # Save encoder for future predictions
     encoder.save("models/encoder.pkl")
 
     # Create model
@@ -41,15 +44,21 @@ def main():
         random_state=42
     )
 
-    # Validate model
-    scores = cross_val_score(model, X_encoded, y, cv=5, scoring="neg_mean_squared_error")
+    # Cross-validation
+    scores = cross_val_score(
+        model,
+        X_encoded,
+        y,
+        cv=5,
+        scoring="neg_mean_squared_error"
+    )
     rmse = (-scores.mean()) ** 0.5
     print("Cross-validated RMSE:", rmse)
 
     # Train final model
     model.fit(X_encoded, y)
 
-    # Save trained model
+    # Save model
     joblib.dump(model, "models/house_price_model.pkl")
     print("Model saved to models/house_price_model.pkl")
 

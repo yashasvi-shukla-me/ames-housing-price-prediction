@@ -3,7 +3,6 @@ import numpy as np
 from sklearn.impute import SimpleImputer
 
 
-
 # The columns with missing values that indicate absence of a feature
 # e.g. no garage, no basement, etc.
 # These column do not contain numerical values and are categorical in nature
@@ -23,23 +22,10 @@ none_cols = [
 num_cols = ['LotFrontage','MasVnrArea','GarageYrBlt']
 
 
-
-def clean_data(df: pd.DataFrame) -> pd.DataFrame:
+def fill_none_cols(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-
-    # Fill categorical absent features with 'None'
     df[none_cols] = df[none_cols].fillna('None')
-
-    # Identify numeric columns
-    num_cols = df.select_dtypes(include=["int64", "float64"]).columns
-
-    # # Fill numeric missing values with median
-    imputer = SimpleImputer(strategy="median")
-    df[num_cols] = imputer.fit_transform(df[num_cols])
-
     return df
-
-
 
 
 
