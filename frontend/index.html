@@ -3,28 +3,89 @@
   <head>
     <meta charset="UTF-8" />
     <title>Ames House Price Predictor</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f5f7fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .card {
+        background: white;
+        padding: 25px 30px;
+        border-radius: 10px;
+        width: 380px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      label {
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px;
+        margin: 6px 0 14px 0;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #1e40af;
+      }
+
+      .result {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: #16a34a;
+      }
+    </style>
   </head>
   <body>
-    <h2>Ames House Price Prediction</h2>
+    <div class="card">
+      <h2>Ames House Price Predictor</h2>
 
-    <label>Overall Quality:</label><br />
-    <input id="OverallQual" type="number" value="7" /><br /><br />
+      <label>Overall Quality (1–10)</label>
+      <input id="OverallQual" type="number" min="1" max="10" value="7" />
 
-    <label>Living Area (sq ft):</label><br />
-    <input id="GrLivArea" type="number" value="1800" /><br /><br />
+      <label>Living Area (sq ft)</label>
+      <input id="GrLivArea" type="number" value="1800" />
 
-    <label>Garage Cars:</label><br />
-    <input id="GarageCars" type="number" value="2" /><br /><br />
+      <label>Garage Capacity (cars)</label>
+      <input id="GarageCars" type="number" value="2" />
 
-    <label>Basement Area (sq ft):</label><br />
-    <input id="TotalBsmtSF" type="number" value="900" /><br /><br />
+      <label>Basement Area (sq ft)</label>
+      <input id="TotalBsmtSF" type="number" value="900" />
 
-    <label>Year Built:</label><br />
-    <input id="YearBuilt" type="number" value="2005" /><br /><br />
+      <label>Year Built</label>
+      <input id="YearBuilt" type="number" value="2005" />
 
-    <button onclick="predict()">Predict Price</button>
+      <button onclick="predict()">Predict Price</button>
 
-    <h3 id="result"></h3>
+      <div class="result" id="result"></div>
+    </div>
 
     <script>
       async function predict() {
@@ -36,18 +97,18 @@
           YearBuilt: Number(document.getElementById("YearBuilt").value),
         };
 
+        document.getElementById("result").innerText = "Predicting...";
+
         const response = await fetch("http://127.0.0.1:8000/predict", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
 
         const data = await response.json();
 
         document.getElementById("result").innerText =
-          "Predicted Price: $" + data.predicted_price;
+          "Estimated Price: $" + data.predicted_price.toLocaleString();
       }
     </script>
   </body>
