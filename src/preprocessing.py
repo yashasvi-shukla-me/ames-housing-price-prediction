@@ -24,7 +24,13 @@ num_cols = ['LotFrontage','MasVnrArea','GarageYrBlt']
 
 def fill_none_cols(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
-    df[none_cols] = df[none_cols].fillna('None')
+
+    for col in none_cols:
+        if col not in df.columns:
+            df[col] = "None"
+        else:
+            df[col] = df[col].fillna("None")
+
     return df
 
 

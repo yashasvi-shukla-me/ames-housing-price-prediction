@@ -26,10 +26,28 @@ class Encoder:
     # The output dataframe will have numerical columns unchanged
     # and categorical columns replaced with their one-hot encoded counterparts
     def transform(self, df: pd.DataFrame):
+        df = df.copy()
+
+        # Ensure all categorical columns seen during training exist
+        for col in self.cat_cols:
+            if col not in df.columns:
+                df[col] = "None"
+
+        # Encode categorical columns
         cat_data = self.encoder.transform(df[self.cat_cols])
-        cat_df = pd.DataFrame(cat_data, columns=self.encoder.get_feature_names_out(self.cat_cols))
+        cat_df = pd.DataFrame(
+            cat_data,
+            columns=self.encoder.get_feature_names_out(self.cat_cols)
+        )
+
+        # Keep numeric columns
         num_df = df.drop(self.cat_cols, axis=1)
-        return pd.concat([num_df.reset_index(drop=True), cat_df.reset_index(drop=True)], axis=1)
+
+        return pd.concat(
+            [num_df.reset_index(drop=True), cat_df.reset_index(drop=True)],
+            axis=1
+        )
+
 
     def save(self, path="models/encoder.pkl"):
         joblib.dump(self, path)

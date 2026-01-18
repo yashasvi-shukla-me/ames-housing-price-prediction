@@ -12,6 +12,7 @@ _model = joblib.load("models/house_price_model.pkl")
 _encoder = Encoder.load("models/encoder.pkl")
 _imputer = MedianImputer.load("models/imputer.pkl")
 
+_feature_order = joblib.load("models/feature_order.pkl")
 
 def predict_price(df: pd.DataFrame) -> float:
 
@@ -20,9 +21,17 @@ def predict_price(df: pd.DataFrame) -> float:
     df = df.copy()
 
     # Apply the same preprocessing as training
+    print("Before fill_none_cols:", type(df))
+
     df = fill_none_cols(df)
+    print("After fill_none_cols:", type(df))
+
+
+
     df = _imputer.transform(df)
     df_encoded = _encoder.transform(df)
+
+    df_encoded = df_encoded.reindex(columns=_feature_order)
 
     # Predict (log-scale)
     log_pred = _model.predict(df_encoded)[0]

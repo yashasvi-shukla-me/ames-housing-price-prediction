@@ -34,6 +34,8 @@ def main():
     encoder = Encoder()
     encoder.fit(X)
     X_encoded = encoder.transform(X)
+    
+    joblib.dump(X_encoded.columns.tolist(), "models/feature_order.pkl")
     encoder.save("models/encoder.pkl")
 
     # Create model

@@ -3,6 +3,7 @@
 import joblib
 import pandas as pd
 from sklearn.impute import SimpleImputer
+import numpy as np
 
 
 class MedianImputer:
@@ -16,6 +17,12 @@ class MedianImputer:
 
     def transform(self, df: pd.DataFrame):
         df = df.copy()
+
+        # Ensure all numeric columns seen during training exist
+        for col in self.num_cols:
+            if col not in df.columns:
+                df[col] = np.nan
+
         df[self.num_cols] = self.imputer.transform(df[self.num_cols])
         return df
 
