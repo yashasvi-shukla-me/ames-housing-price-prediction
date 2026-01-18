@@ -3,9 +3,19 @@ from pydantic import BaseModel
 import pandas as pd
 
 from src.inference import predict_price # using absolute import
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Ames House Price Prediction API")
 
+
+# middleware to allow CORS (Cross-Origin Resource Sharing)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],      # allow all origins (safe for demo)
+    allow_credentials=True,
+    allow_methods=["*"],      # allow POST, OPTIONS, etc
+    allow_headers=["*"],
+)
 
 # This defines the JSON schema my API accepts
 class HouseInput(BaseModel):

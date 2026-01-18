@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ames House Price Predictor</title>
+  </head>
+  <body>
+    <h2>Ames House Price Prediction</h2>
+
+    <label>Overall Quality:</label><br />
+    <input id="OverallQual" type="number" value="7" /><br /><br />
+
+    <label>Living Area (sq ft):</label><br />
+    <input id="GrLivArea" type="number" value="1800" /><br /><br />
+
+    <label>Garage Cars:</label><br />
+    <input id="GarageCars" type="number" value="2" /><br /><br />
+
+    <label>Basement Area (sq ft):</label><br />
+    <input id="TotalBsmtSF" type="number" value="900" /><br /><br />
+
+    <label>Year Built:</label><br />
+    <input id="YearBuilt" type="number" value="2005" /><br /><br />
+
+    <button onclick="predict()">Predict Price</button>
+
+    <h3 id="result"></h3>
+
+    <script>
+      async function predict() {
+        const payload = {
+          OverallQual: Number(document.getElementById("OverallQual").value),
+          GrLivArea: Number(document.getElementById("GrLivArea").value),
+          GarageCars: Number(document.getElementById("GarageCars").value),
+          TotalBsmtSF: Number(document.getElementById("TotalBsmtSF").value),
+          YearBuilt: Number(document.getElementById("YearBuilt").value),
+        };
+
+        const response = await fetch("http://127.0.0.1:8000/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        document.getElementById("result").innerText =
+          "Predicted Price: $" + data.predicted_price;
+      }
+    </script>
+  </body>
+</html>
