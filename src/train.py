@@ -5,9 +5,9 @@ import joblib
 from sklearn.model_selection import cross_val_score
 from sklearn.ensemble import GradientBoostingRegressor
 
-from preprocessing import fill_none_cols
-from encoder import Encoder
-from imputer import MedianImputer
+from src.preprocessing import fill_none_cols
+from src.encoder import Encoder
+from src.imputer import MedianImputer
 
 
 def main():

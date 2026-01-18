@@ -31,7 +31,7 @@ def fill_none_cols(df: pd.DataFrame) -> pd.DataFrame:
 
 def prepare_features(df: pd.DataFrame, is_train: bool = True):
 
-    df = clean_data(df)
+    df = fill_none_cols(df)
 
     # If training data, apply log transformation to SalePrice
     # to reduce skewness
