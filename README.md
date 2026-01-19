@@ -1,133 +1,113 @@
-# 🏯 House Prices – Advanced Regression Techniques
+# 🏯 Ames House Price Prediction - ML Web Application
 
-A beginner-friendly Machine Learning project using the Ames Housing Dataset.
+An end to end machine learning application that predicts house prices using the Ames Housing dataset.  
+The project goes beyond a Kaggle notebook and demonstrates **production-ready ML inference**, exposed via a FastAPI backend and consumed by a browser-based frontend.
 
----
-
-## Project Overview
-
-This project builds a **regression model** to predict house prices using real housing data.  
-It follows a clean and professional Machine Learning workflow used in industry.
-
-You will learn:
-
-- How to structure ML projects
-- How to clean and prepare datasets
-- How to train and evaluate ML models
-- How to save and reuse trained models
-- How to make predictions
+🔗 **Live Demo:** https://ames-house-price-predict.netlify.app  
+🔗 **Backend API:** https://ames-house-price-api.onrender.com  
+🔗 **API Docs (Swagger):** https://ames-house-price-api.onrender.com/docs
 
 ---
 
-## 💿 Dataset Information
+## 🚀 Project Overview
+
+Most Kaggle projects stop at model training.  
+This project converts a trained ML model into a **real-world application** with:
+
+- Robust preprocessing at inference time
+- A public REST API
+- A live frontend UI
+- Safe handling of partial user input
+- Stable and reproducible predictions
+
+Users can change house attributes in the browser and instantly see updated price predictions.
+
+---
+
+## 🧠 Key Features
+
+- End-to-end ML pipeline (training → inference → UI)
+- FastAPI backend with schema validation
+- Robust preprocessing:
+  - Persistent median imputer (no data leakage)
+  - Safe handling of missing numeric & categorical features
+  - Stable feature ordering between training and inference
+- One-Hot Encoding with unseen category handling
+- Browser-based frontend (HTML + JavaScript)
+- Fully deployed (Netlify + Render)
+
+---
+
+## 🏗️ System Architecture
+
+Frontend (Browser)
+
+↓
+
+FastAPI Backend (/predict)
+
+↓
+
+Inference Pipeline (Imputer → Encoder → Model)
+
+↓
+
+Predicted House Price
+
+---
+
+## 🛠️ Tech Stack
+
+### Machine Learning
+
+- Python
+- Scikit-learn
+- Pandas, NumPy
+
+### Backend
+
+- FastAPI
+- Uvicorn
+- Pydantic (request validation)
+
+### Frontend
+
+- HTML
+- CSS
+- JavaScript (Fetch API)
+
+### Deployment
+
+- Backend: Render
+- Frontend: Netlify
+
+---
+
+## 📊 Model Details
 
 - Dataset: Ames Housing Dataset
-- Kaggle Competition: House Prices – Advanced Regression Techniques
-- Files used:
-  - `train.csv`
-  - `test.csv`
+- Model: Gradient Boosting Regressor
+- Target transformation: `log1p(SalePrice)`
+- Inference output converted back using `expm1`
+
+### Important ML Engineering Decisions
+
+- Saved and reused preprocessing artifacts (imputer, encoder)
+- Prevented training–inference skew
+- Expanded partial user input to full training schema
+- Enforced exact feature order during inference
+
+These steps ensure **correct and stable predictions** in production.
 
 ---
 
-## 🛠 Libraries Used
+### ▶️ Running Locally
 
-| Purpose               | Library                |
-| --------------------- | ---------------------- |
-| Numerical Computing   | numpy                  |
-| Data Handling         | pandas                 |
-| Visualization         | matplotlib, seaborn    |
-| Machine Learning      | scikit-learn, lightgbm |
-| Model Saving          | joblib                 |
-| Environment Variables | python-dotenv          |
-
-Install all dependencies:
-
-```bash
-pip install numpy pandas scikit-learn matplotlib seaborn lightgbm joblib python-dotenv
-```
-
-### What is a Virtual Environment?
-
-A virtual environment (venv) is a private workspace for your project.
-It keeps your libraries isolated so that different projects do not break each other.
-
-📁 Project Structure
-
-ames-housing-ml/
-│
-
-├ data/
-
-- train.csv
-
-- test.csv
-
-├ src/
-
-- data_preprocessing.py
-
-- feature_engineering.py
-
-- train_model.py
-
-- predict.py
-
-├ models/
-
-- house_price_model.pkl
-
-└─ README.md
-
-## 🪜 Step-by-Step Workflow
-
-### Step 1: Create Project Folder
-
-mkdir ames-housing-ml
-cd ames-housing-ml
-
-### Step 2: Create Virtual Environment
-
-python -m venv venv
-source venv/bin/activate # On Linux/Mac
-venv\Scripts\activate # On Windows
-
-### Step 3: Install Libraries
-
-pip install numpy pandas scikit-learn matplotlib seaborn lightgbm joblib python-dotenv
-
-### Step 4: Download Dataset
-
-Download train.csv and test.csv from Kaggle and place them inside the data/ folder.
-
-### Step 5: Data Preprocessing
-
-Handle missing values
-Separate numerical and categorical columns
-Prepare data for training
-
-### Step 6: Feature Engineering
-
-Convert categorical values into numeric values
-Prepare clean features for the model
-
-### Step 7: Train Model
-
-python src/train_model.py
-This will train the model and save it into the models/ folder.
-
-### Step 8: Make Predictions
-
-python src/predict.py
-Predictions will be generated for test data.
-📈 Evaluation Metric
-We use Root Mean Squared Error (RMSE) to evaluate the model.
-Lower RMSE means better predictions.
-
-📦 **Final Output**
-
-Trained ML Model saved in models/house_price_model.pkl
-Prediction file for submission
-
-🎯 **Goal**
-
-Build a real world ML regression pipeline and understand how professional ML projects are structured.
+1. Install dependencies
+   pip install -r requirements.txt
+2. Train the model
+   python -m src.train
+3. Start the backend
+   uvicorn src.app:app --reload
+4. Open the frontend
+   Open frontend/index.html in a browser.
